@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+    <style name="FileListerItemColor">
+        <item name="android:textColor">#212121</item>
+        <item name="android:tint">#4CAF50</item>
+    </style>
+
+</resources>

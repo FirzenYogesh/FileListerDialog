@@ -1,0 +1,82 @@
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+def artifact = new Properties()
+artifact.load(new FileInputStream("deploy.properties"))
+
+version=artifact.version
+group=artifact.groupId
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            packaging 'aar'
+            groupId artifact.groupId
+            artifactId artifact.id
+            version artifact.version
+            name artifact.id // pom.project.name must be same as bintray.pkg.name
+            url artifact.siteUrl
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+            developers {
+                developer {
+                    id 'firzenyogesh'
+                    name 'S.Yogesh'
+                    email 'syogesh0705@gmail.com'
+                }
+            }
+            scm {
+                connection artifact.gitUrl
+                developerConnection artifact.gitUrl
+                url artifact.siteUrl
+            }
+        }
+    }
+}
+
+Properties properties = new Properties()
+File propFile = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties" as File
+properties.load(propFile.newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = artifact.id
+        websiteUrl = artifact.siteUrl
+        vcsUrl = artifact.gitUrl
+        licenses = artifact.licenses
+        publish = true
+        version {
+            name = artifact.version
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+    // options.encoding = 'UTF-8'
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
