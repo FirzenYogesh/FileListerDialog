@@ -89,13 +89,17 @@ After importing the library you can use FileListerDialog to list the files and p
 
 ## Screenshots
 
+#### FileListerDialog
 ![](raw/Screenshot_1500726143.png?raw=true)
 ![](raw/Screenshot_1500726169.png?raw=true)
+#### Create a new folder
 ![](raw/Screenshot_1500726176.png?raw=true)
 ![](raw/Screenshot_1500726185.png?raw=true)
-When a Directory is picked
+
+#### When a Directory is picked
 ![](raw/Screenshot_1500726269.png?raw=true)
-When a file is picked
+
+#### When a file is picked
 ![](raw/Screenshot_1500726291.png?raw=true)
 
 
