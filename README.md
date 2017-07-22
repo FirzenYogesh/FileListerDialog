@@ -46,7 +46,7 @@ After importing the library you can use FileListerDialog to list the files and p
    ```   
    Instance with a theme for Dialog:
    ```   
-      FileListerDialog fileListerDialog = FileListerDialog.createFileListerDialog(context);
+      FileListerDialog fileListerDialog = FileListerDialog.createFileListerDialog(context, themeId);
    ```   
 2. Set OnFileSelectedListener so that you get what file/ directory has been selected
    ```   
