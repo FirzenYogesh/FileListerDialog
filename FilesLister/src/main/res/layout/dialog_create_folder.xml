@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
@@ -12,7 +13,7 @@
             android:id="@+id/edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Folder Name Here"
+            android:hint="@string/create_folder_hint"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1" />

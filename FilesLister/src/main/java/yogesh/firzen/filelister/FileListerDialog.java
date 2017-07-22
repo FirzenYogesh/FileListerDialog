@@ -5,33 +5,36 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.WindowManager;
 
 import java.io.File;
+
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_NEUTRAL;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
  * Created by S. Yogesh on 9/7/17.
  */
 
-public class FileListerDialog extends AlertDialog {
+public class FileListerDialog {
 
     public enum FILE_FILTER {ALL_FILES, DIRECTORY_ONLY, IMAGE_ONLY, VIDEO_ONLY, AUDIO_ONLY}
 
-    private FilesListerView filesListerView;
+    private AlertDialog alertDialog;
 
-    private Context context;
+    private FilesListerView filesListerView;
 
     private OnFileSelectedListener onFileSelectedListener;
 
     private FileListerDialog(@NonNull Context context) {
-        super(context);
-        this.context = context;
+        //super(context);
+        alertDialog = new AlertDialog.Builder(context).create();
         init(context);
     }
 
     private FileListerDialog(@NonNull Context context, int themeResId) {
-        super(context, themeResId);
-        this.context = context;
+        //super(context, themeResId);
+        alertDialog = new AlertDialog.Builder(context, themeResId).create();
         init(context);
     }
 
@@ -44,8 +47,9 @@ public class FileListerDialog extends AlertDialog {
     }
 
     private void init(Context context) {
-        filesListerView = new FilesListerView(getContext());
-        setButton(BUTTON_POSITIVE, "Select", new OnClickListener() {
+        filesListerView = new FilesListerView(context);
+        alertDialog.setView(filesListerView);
+        alertDialog.setButton(BUTTON_POSITIVE, "Select", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -53,43 +57,42 @@ public class FileListerDialog extends AlertDialog {
                     onFileSelectedListener.onFileSelected(filesListerView.getSelected(), filesListerView.getSelected().getAbsolutePath());
             }
         });
-        setButton(BUTTON_NEUTRAL, "Default Dir", new OnClickListener() {
+        alertDialog.setButton(BUTTON_NEUTRAL, "Default Dir", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //filesListerView.goToDefaultDir();
             }
         });
-        setButton(BUTTON_NEGATIVE, "Cancel", new OnClickListener() {
+        alertDialog.setButton(BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
-        setView(filesListerView);
     }
 
-    @Override
     public void show() {
-        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        //getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         switch (filesListerView.getFileFilter()) {
             case DIRECTORY_ONLY:
-                setTitle("Select a directory");
+                alertDialog.setTitle("Select a directory");
                 break;
             case VIDEO_ONLY:
-                setTitle("Select a Video file");
+                alertDialog.setTitle("Select a Video file");
                 break;
             case IMAGE_ONLY:
-                setTitle("Select an Image file");
+                alertDialog.setTitle("Select an Image file");
                 break;
             case AUDIO_ONLY:
-                setTitle("Select an Audio file");
+                alertDialog.setTitle("Select an Audio file");
                 break;
             case ALL_FILES:
+                alertDialog.setTitle("Select a file");
                 break;
         }
         filesListerView.start();
-        super.show();
-        getButton(BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+        alertDialog.show();
+        alertDialog.getButton(BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 filesListerView.goToDefaultDir();

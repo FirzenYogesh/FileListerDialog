@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FileLister</string>
+    <string name="create_folder_hint">Enter Folder Name Here</string>
 </resources>
