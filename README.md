@@ -90,17 +90,15 @@ After importing the library you can use FileListerDialog to list the files and p
 ## Screenshots
 
 #### FileListerDialog
-![](raw/Screenshot_1500726143.png?raw=true)
-![](raw/Screenshot_1500726169.png?raw=true)
+<img src="raw/Screenshot_1500726143.png" width="320"/> <img src="raw/Screenshot_1500726169.png" width="320"/>
 #### Create a new folder
-![](raw/Screenshot_1500726176.png?raw=true)
-![](raw/Screenshot_1500726185.png?raw=true)
+<img src="raw/Screenshot_1500726176.png" width="320"/> <img src="raw/Screenshot_1500726185.png" width="320"/>
 
 #### When a Directory is picked
-![](raw/Screenshot_1500726269.png?raw=true)
+<img src="raw/Screenshot_1500726269.png" width="320"/>
 
 #### When a file is picked
-![](raw/Screenshot_1500726291.png?raw=true)
+<img src="raw/Screenshot_1500726291.png" width="320"/>
 
 
 ## Authors
