@@ -85,7 +85,11 @@ After importing the library you can use FileListerDialog to list the files and p
       FileListerDialog.FILE_FILTER.VIDEO_ONLY
       FileListerDialog.FILE_FILTER.AUDIO_ONLY
    ```  
+5. Finally call show() to open the dialog.
 
+   ```
+      fileListerDialog.show();
+   ```
 
 ## Screenshots
 
