@@ -13,12 +13,36 @@ import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
- * Created by S. Yogesh on 9/7/17.
+ * A File Lister Dialog
  */
 
 public class FileListerDialog {
 
-    public enum FILE_FILTER {ALL_FILES, DIRECTORY_ONLY, IMAGE_ONLY, VIDEO_ONLY, AUDIO_ONLY}
+    /**
+     * File Filter for the FileListerDialog
+     */
+    public enum FILE_FILTER {
+        /**
+         * List All Files
+         */
+        ALL_FILES,
+        /**
+         * List only directories
+         */
+        DIRECTORY_ONLY,
+        /**
+         * List Directory and Image files
+         */
+        IMAGE_ONLY,
+        /**
+         * List Directory and Video files
+         */
+        VIDEO_ONLY,
+        /**
+         * List Directory and Audio files
+         */
+        AUDIO_ONLY
+    }
 
     private AlertDialog alertDialog;
 
@@ -38,10 +62,23 @@ public class FileListerDialog {
         init(context);
     }
 
+    /**
+     * Creates a default instance of FileListerDialog
+     *
+     * @param context Context of the App
+     * @return Instance of FileListerDialog
+     */
     public static FileListerDialog createFileListerDialog(@NonNull Context context) {
         return new FileListerDialog(context);
     }
 
+    /**
+     * Creates an instance of FileListerDialog with the specified Theme
+     *
+     * @param context Context of the App
+     * @param themeId Theme Id for the dialog
+     * @return Instance of FileListerDialog
+     */
     public static FileListerDialog createFileListerDialog(@NonNull Context context, int themeId) {
         return new FileListerDialog(context, themeId);
     }
@@ -71,6 +108,9 @@ public class FileListerDialog {
         });
     }
 
+    /**
+     * Display the FileListerDialog
+     */
     public void show() {
         //getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         switch (filesListerView.getFileFilter()) {
@@ -89,6 +129,8 @@ public class FileListerDialog {
             case ALL_FILES:
                 alertDialog.setTitle("Select a file");
                 break;
+            default:
+                alertDialog.setTitle("Select a file");
         }
         filesListerView.start();
         alertDialog.show();
@@ -100,18 +142,38 @@ public class FileListerDialog {
         });
     }
 
+    /**
+     * Listener to know which file/directory is selected
+     *
+     * @param onFileSelectedListener Instance of the Listener
+     */
     public void setOnFileSelectedListener(OnFileSelectedListener onFileSelectedListener) {
         this.onFileSelectedListener = onFileSelectedListener;
     }
 
-    public void setDefaultDir(File file) {
+    /**
+     * Set the initial directory to show the list of files in that directory
+     *
+     * @param file File pointing to the directory
+     */
+    public void setDefaultDir(@NonNull File file) {
         filesListerView.setDefaultDir(file);
     }
 
-    public void setDefaultDir(String file) {
+    /**
+     * Set the initial directory to show the list of files in that directory
+     *
+     * @param file String denoting to the directory
+     */
+    public void setDefaultDir(@NonNull String file) {
         filesListerView.setDefaultDir(file);
     }
 
+    /**
+     * Set the file filter for listing the files
+     *
+     * @param fileFilter One of the FILE_FILTER values
+     */
     public void setFileFilter(FILE_FILTER fileFilter) {
         filesListerView.setFileFilter(fileFilter);
     }
