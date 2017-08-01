@@ -12,7 +12,7 @@ This library is posted in jCenter
 
 ```
    dependencies {
-      implementation 'yogesh.firzen:FilesLister:1.0.1.f'
+      implementation 'yogesh.firzen:FilesLister:1.0.1.g'
    }
 ```
 If any problem occured while importing please add this line to your app module's build. gradle file
@@ -27,9 +27,9 @@ This library has dependencies
 
 ```
    dependencies {
-      implementation 'com.android.support:appcompat-v7:26.0.0-beta2'
-      implementation 'com.android.support:design:26.0.0-beta2'
-      implementation 'com.android.support:recyclerview-v7:26.0.0-beta2'
+      implementation 'com.android.support:appcompat-v7:26.0.0'
+      implementation 'com.android.support:design:26.0.0'
+      implementation 'com.android.support:recyclerview-v7:26.0.0'
       implementation 'yogesh.firzen:MukkiyaSevaigal:1.0.6'
    }
 ```
