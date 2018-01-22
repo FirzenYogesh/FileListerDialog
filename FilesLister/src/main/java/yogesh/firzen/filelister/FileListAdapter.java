@@ -1,12 +1,17 @@
 package yogesh.firzen.filelister;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -14,34 +19,37 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
 
 import yogesh.firzen.mukkiasevaigal.M;
 import yogesh.firzen.mukkiasevaigal.S;
 
 /**
- * Created by root on 9/7/17.
+ * Created by S.Yogesh on 9/7/17.
  */
 
 class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListHolder> {
 
-    private List<File> data = new LinkedList<>();
+    private ArrayList<File> data = new ArrayList<>();
     //private File parent = Environment.getExternalStorageDirectory();
     private File defaultDir = Environment.getExternalStorageDirectory();
-    private File selectedFile = defaultDir;
+    private File selectedFile = null;
+    private ArrayList<File> selectedFiles = new ArrayList<>();
     private FileListerDialog.FILE_FILTER fileFilter = FileListerDialog.FILE_FILTER.ALL_FILES;
     private Context context;
     private FilesListerView listerView;
     private boolean unreadableDir;
+    private boolean showHiddenFilesAndFolders = false;
+    private boolean enableMultiSelect = false;
 
 
     FileListerAdapter(File defaultDir, FilesListerView view) {
         this.defaultDir = defaultDir;
-        selectedFile = defaultDir;
+        selectedFile = null;
+        //selectedFiles.add(defaultDir);
         this.context = view.getContext();
         listerView = view;
     }
@@ -74,8 +82,16 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
 
     }
 
+    void setShowHiddenFilesAndFolders(boolean show) {
+        showHiddenFilesAndFolders = show;
+    }
+
+    void setEnableMultiSelect(boolean enable) {
+        enableMultiSelect = enable;
+    }
+
     private void fileLister(File dir) {
-        LinkedList<File> fs = new LinkedList<>();
+        ArrayList<File> fs = new ArrayList<>();
         if (dir.getAbsolutePath().equals("/")
                 || dir.getAbsolutePath().equals("/storage")
                 || dir.getAbsolutePath().equals("/storage/emulated")
@@ -123,25 +139,37 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
                 public boolean accept(File file) {
                     switch (getFileFilter()) {
                         case ALL_FILES:
-                            return true;
+                            return showHiddenFilesAndFolders || !file.getName().startsWith(".");
                         case AUDIO_ONLY:
-                            return S.isAudio(file) || file.isDirectory();
+                            if (showHiddenFilesAndFolders)
+                                return (S.isAudio(file) || file.isDirectory());
+                            else
+                                return (S.isAudio(file) || file.isDirectory()) && !file.getName().startsWith(".");
                         case IMAGE_ONLY:
-                            return S.isImage(file) || file.isDirectory();
+                            if (showHiddenFilesAndFolders)
+                                return (S.isImage(file) || file.isDirectory());
+                            else
+                                return (S.isImage(file) || file.isDirectory()) && !file.getName().startsWith(".");
                         case VIDEO_ONLY:
-                            return S.isVideo(file) || file.isDirectory();
+                            if (showHiddenFilesAndFolders)
+                                return (S.isVideo(file) || file.isDirectory());
+                            else
+                                return (S.isVideo(file) || file.isDirectory()) && !file.getName().startsWith(".");
                         case DIRECTORY_ONLY:
-                            return file.isDirectory();
+                            if (showHiddenFilesAndFolders)
+                                return file.isDirectory();
+                            else
+                                return file.isDirectory() && !file.getName().startsWith(".");
                     }
                     return false;
                 }
             });
             if (files != null) {
-                fs = new LinkedList<>(Arrays.asList(files));
+                fs = new ArrayList<>(Arrays.asList(files));
             }
         }
         M.L("From FileListAdapter", fs);
-        data = new LinkedList<>(fs);
+        data = new ArrayList<>(fs);
         Collections.sort(data, new Comparator<File>() {
             @Override
             public int compare(File f1, File f2) {
@@ -169,7 +197,7 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
             data.add(0, selectedFile.getParentFile());
             data.add(1, null);
         }
-
+        selectedFile = null;
     }
 
     @Override
@@ -185,6 +213,8 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
         } else if (!unreadableDir) {
             holder.name.setText("Create a new Folder here");
             holder.icon.setImageResource(R.drawable.ic_create_new_folder_black_48dp);
+            holder.radioButton.setVisibility(View.GONE);
+            holder.checkBox.setVisibility(View.GONE);
         }
         if (unreadableDir) {
             if (f != null) {
@@ -194,9 +224,13 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
                     holder.name.setText(f.getName() + " (External)");
                 }
             }
+            holder.radioButton.setVisibility(View.GONE);
+            holder.checkBox.setVisibility(View.GONE);
         }
         if (position == 0 && f != null && !unreadableDir) {
             holder.icon.setImageResource(R.drawable.ic_subdirectory_up_black_48dp);
+            holder.radioButton.setVisibility(View.GONE);
+            holder.checkBox.setVisibility(View.GONE);
         } else if (f != null) {
             if (f.isDirectory())
                 holder.icon.setImageResource(R.drawable.ic_folder_black_48dp);
@@ -208,6 +242,18 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
                 holder.icon.setImageResource(R.drawable.ic_audiotrack_black_48dp);
             else
                 holder.icon.setImageResource(R.drawable.ic_insert_drive_file_black_48dp);
+            if (enableMultiSelect) {
+                holder.checkBox.setVisibility(View.VISIBLE);
+                holder.radioButton.setVisibility(View.GONE);
+            } else {
+                holder.radioButton.setVisibility(View.VISIBLE);
+                holder.checkBox.setVisibility(View.GONE);
+            }
+        }
+        if (enableMultiSelect) {
+            holder.checkBox.setChecked(selectedFiles.contains(f));
+        } else {
+            holder.radioButton.setChecked(f == selectedFile);
         }
     }
 
@@ -220,24 +266,43 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
         return selectedFile;
     }
 
+    ArrayList<File> getSelectedFiles() {
+        return selectedFiles;
+    }
+
     void goToDefault() {
         fileLister(defaultDir);
     }
 
-    class FileListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class FileListHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
 
         TextView name;
         ImageView icon;
+        AppCompatCheckBox checkBox;
+        AppCompatRadioButton radioButton;
 
         FileListHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             icon = itemView.findViewById(R.id.icon);
-            itemView.findViewById(R.id.layout).setOnClickListener(this);
+            checkBox = itemView.findViewById(R.id.checkbox);
+            radioButton = itemView.findViewById(R.id.radio);
+            itemView.findViewById(R.id.layout).setOnTouchListener(this);
         }
 
-        @Override
-        public void onClick(View v) {
+        void onDoubleTap() {
+            File f = data.get(getPosition());
+            //selectedFile = f;
+            M.L("From FileLister", f.getAbsolutePath());
+            if (f.isDirectory()) {
+                fileLister(f);
+                selectedFile = null;
+                selectedFiles = new ArrayList<>();
+            } else
+                M.T(context, "This file is not a directory!");
+        }
+
+        void onSingleTapUp() {
             if (data.get(getPosition()) == null) {
                 View view = View.inflate(getContext(), R.layout.dialog_create_folder, null);
                 final AppCompatEditText editText = view.findViewById(R.id.edittext);
@@ -272,13 +337,80 @@ class FileListerAdapter extends RecyclerView.Adapter<FileListerAdapter.FileListH
                 });
             } else {
                 File f = data.get(getPosition());
-                selectedFile = f;
-                M.L("From FileLister", f.getAbsolutePath());
-                if (f.isDirectory()) {
-                    fileLister(f);
+                if (unreadableDir) {
+                    M.L("From FileLister", f.getAbsolutePath());
+                    if (f.isDirectory()) {
+                        fileLister(f);
+                    }
+                    selectedFile = null;
+                    selectedFiles = new ArrayList<>();
                 } else {
+                    if (getPosition() == 0) {
+                        M.L("From FileLister", f.getAbsolutePath());
+                        if (f.isDirectory()) {
+                            fileLister(f);
+                        }
+                        selectedFile = null;
+                        selectedFiles = new ArrayList<>();
+                    } else {
+                        if (enableMultiSelect) {
+                            if (selectedFiles.contains(f))
+                                selectedFiles.remove(f);
+                            else
+                                selectedFiles.add(f);
+                            notifyItemChanged(getPosition());
+                        } else {
+                            selectedFile = data.get(getPosition());
+                            notifyDataSetChanged();
+                        }
+                    }
                 }
             }
+        }
+
+        private final int CLICK_THRESHOLD = S.dpToPx(5);
+        private float sx, sy;
+        private long lastTouchDown;
+        private byte noClicks = 0;
+        private boolean check = false;
+
+        @SuppressLint("ClickableViewAccessibility")
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (!check) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (noClicks == 2)
+                            onDoubleTap();
+                        else if (noClicks == 1)
+                            onSingleTapUp();
+                        noClicks = 0;
+                        check = false;
+                    }
+                }, 300);
+            }
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    sx = motionEvent.getRawX();
+                    sy = motionEvent.getRawY();
+                    lastTouchDown = System.currentTimeMillis();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    if (isAClick(sx, motionEvent.getRawX(), sy, motionEvent.getRawY(), lastTouchDown, System.currentTimeMillis())) {
+                        noClicks++;
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    noClicks = 0;
+            }
+            return true;
+        }
+
+        private boolean isAClick(float startX, float endX, float startY, float endY, long start, long end) {
+            float differenceX = Math.abs(startX - endX);
+            float differenceY = Math.abs(startY - endY);
+            return (differenceX < 10 && differenceY < 10) && (end - start < 100);
         }
     }
 

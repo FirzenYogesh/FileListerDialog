@@ -8,6 +8,8 @@ import android.view.View;
 
 import java.io.File;
 
+import yogesh.firzen.mukkiasevaigal.M;
+
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
@@ -50,6 +52,10 @@ public class FileListerDialog {
 
     private OnFileSelectedListener onFileSelectedListener;
 
+    private OnMultiFileSelectedListener onMultiFileSelectedListener;
+
+    private boolean enableMultiSelect = false;
+
     private FileListerDialog(@NonNull Context context) {
         //super(context);
         alertDialog = new AlertDialog.Builder(context).create();
@@ -89,9 +95,7 @@ public class FileListerDialog {
         alertDialog.setButton(BUTTON_POSITIVE, "Select", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                if (onFileSelectedListener != null)
-                    onFileSelectedListener.onFileSelected(filesListerView.getSelected(), filesListerView.getSelected().getAbsolutePath());
+                //dialogInterface.dismiss();
             }
         });
         alertDialog.setButton(BUTTON_NEUTRAL, "Default Dir", new DialogInterface.OnClickListener() {
@@ -140,15 +144,44 @@ public class FileListerDialog {
                 filesListerView.goToDefaultDir();
             }
         });
+        alertDialog.getButton(BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (enableMultiSelect) {
+                    if (filesListerView.getSelectedFiles().isEmpty())
+                        M.T(filesListerView.getContext(), "Please select a file/directory");
+                    else if (onMultiFileSelectedListener != null) {
+                        onMultiFileSelectedListener.onFilesSelected(filesListerView.getSelectedFiles());
+                        alertDialog.dismiss();
+                    }
+                } else {
+                    if (filesListerView.getSelectedFile() == null)
+                        M.T(filesListerView.getContext(), "Please select a file/directory");
+                    else if (onFileSelectedListener != null) {
+                        onFileSelectedListener.onFileSelected(filesListerView.getSelectedFile(), filesListerView.getSelectedFile().getAbsolutePath());
+                        alertDialog.dismiss();
+                    }
+                }
+            }
+        });
     }
 
     /**
-     * Listener to know which file/directory is selected
+     * Set this listener to know which file/directory is selected
      *
      * @param onFileSelectedListener Instance of the Listener
      */
     public void setOnFileSelectedListener(OnFileSelectedListener onFileSelectedListener) {
         this.onFileSelectedListener = onFileSelectedListener;
+    }
+
+    /**
+     * Set this listener to know which files/directories are selected
+     *
+     * @param onMultiFileSelectedListener Instance of the Listener
+     */
+    public void setOnMultiFileSelectedListener(OnMultiFileSelectedListener onMultiFileSelectedListener) {
+        this.onMultiFileSelectedListener = onMultiFileSelectedListener;
     }
 
     /**
@@ -176,6 +209,25 @@ public class FileListerDialog {
      */
     public void setFileFilter(FILE_FILTER fileFilter) {
         filesListerView.setFileFilter(fileFilter);
+    }
+
+    /**
+     * Use this to show/hide hidden files/folders by default it is false
+     *
+     * @param show Set to true if you need to show else false
+     */
+    public void setShowHiddenFilesAndFolders(boolean show) {
+        filesListerView.setShowHiddenFilesAndFolders(show);
+    }
+
+    /**
+     * Set this to enable multi selection of files/directories. By default multi select is disabled.
+     *
+     * @param enable Set true to enable multi select else set to false
+     */
+    public void setEnableMultiSelect(boolean enable) {
+        filesListerView.setEnableMultiSelect(enable);
+        enableMultiSelect = enable;
     }
 
 }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -66,8 +67,12 @@ class FilesListerView extends RecyclerView {
         setDefaultDir(new File(path));
     }
 
-    File getSelected() {
+    File getSelectedFile() {
         return adapter.getSelected();
+    }
+
+    ArrayList<File> getSelectedFiles() {
+        return adapter.getSelectedFiles();
     }
 
     void goToDefaultDir() {
@@ -80,5 +85,13 @@ class FilesListerView extends RecyclerView {
 
     FileListerDialog.FILE_FILTER getFileFilter() {
         return adapter.getFileFilter();
+    }
+
+    void setShowHiddenFilesAndFolders(boolean show) {
+        adapter.setShowHiddenFilesAndFolders(show);
+    }
+
+    void setEnableMultiSelect(boolean enable) {
+        adapter.setEnableMultiSelect(enable);
     }
 }
