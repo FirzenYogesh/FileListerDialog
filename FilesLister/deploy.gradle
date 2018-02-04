@@ -25,8 +25,8 @@ install {
             developers {
                 developer {
                     id 'firzenyogesh'
-                    name 'S.Yogesh'
-                    email 'syogesh0705@gmail.com'
+                    name 'Yogesh S'
+                    email 'contact@syogesh.in'
                 }
             }
             scm {
