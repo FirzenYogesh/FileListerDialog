@@ -2,7 +2,7 @@ apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 def artifact = new Properties()
-artifact.load(new FileInputStream("deploy.properties"))
+artifact.load(new FileInputStream("${rootDir}${File.separator}deploy.properties"))
 
 version=artifact.version
 group=artifact.groupId
@@ -39,7 +39,7 @@ install {
 }
 
 Properties properties = new Properties()
-File propFile = "${System.properties['user.home']}${File.separator}.gradle${File.separator}bintray.properties" as File
+File propFile = "${System.properties['user.home']}${File.separator}development${File.separator}bintray${File.separator}FileLister.properties" as File
 properties.load(propFile.newDataInputStream())
 
 bintray {
@@ -65,7 +65,7 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
+/*task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
@@ -74,9 +74,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
     // options.encoding = 'UTF-8'
-}
+}*/
 
 artifacts {
-    archives javadocJar
+    //archives javadocJar
     archives sourcesJar
 }

@@ -27,10 +27,10 @@ This library has dependencies
 
 ```
    dependencies {
-      implementation 'com.android.support:appcompat-v7:26.0.0'
-      implementation 'com.android.support:design:26.0.0'
-      implementation 'com.android.support:recyclerview-v7:26.0.0'
-      implementation 'yogesh.firzen:MukkiyaSevaigal:1.0.6'
+      implementation 'androidx.appcompat:appcompat:1.0.2'
+      implementation 'com.google.android.material:material:1.0.0'
+      implementation 'androidx.recyclerview:recyclerview:1.0.0'
+      implementation 'yogesh.firzen:MukkiyaSevaigal:3.0.1'
       implementation 'org.apache.commons:commons-io:1.3.2'
    }
 ```

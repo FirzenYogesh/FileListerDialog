@@ -13,9 +13,9 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_folder_black_48dp" />
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_folder_black" />
 
         <TextView
             android:id="@+id/name"
