@@ -12,6 +12,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -32,7 +33,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation 'yogesh.firzen:MukkiyaSevaigal:3.0.4'
+    implementation 'yogesh.firzen:MukkiyaSevaigal:3.0.8'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 }
 
 
