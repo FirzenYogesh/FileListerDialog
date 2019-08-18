@@ -12,7 +12,7 @@ This library is posted in jCenter
 
 ```
    dependencies {
-      implementation 'yogesh.firzen:FilesLister:1.0.1.g'
+      implementation 'yogesh.firzen:FilesLister:2.0.12'
    }
 ```
 If any problem occured while importing please add this line to your app module's build. gradle file
@@ -85,6 +85,14 @@ After importing the library you can use FileListerDialog to list the files and p
       FileListerDialog.FILE_FILTER.IMAGE_ONLY
       FileListerDialog.FILE_FILTER.VIDEO_ONLY
       FileListerDialog.FILE_FILTER.AUDIO_ONLY
+      FileListerDialog.FILE_FILTER.ALL_MEDIA
+      FileListerDialog.FILE_FILTER.DOCUMENT_ONLY
+      FileListerDialog.FILE_FILTER.SPREADSHEET_ONLY
+      FileListerDialog.FILE_FILTER.PRESENTATION_ONLY
+      FileListerDialog.FILE_FILTER.ALL_DOCUMENTS
+      FileListerDialog.FILE_FILTER.COMPRESSED_ONLY
+      FileListerDialog.FILE_FILTER.APK_ONLY
+      FileListerDialog.FILE_FILTER.CUSTOM_EXTENSION
    ```  
 5. Finally call show() to open the dialog.
 
