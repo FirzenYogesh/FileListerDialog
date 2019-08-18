@@ -30,8 +30,8 @@ This library has dependencies
       implementation 'androidx.appcompat:appcompat:1.0.2'
       implementation 'com.google.android.material:material:1.0.0'
       implementation 'androidx.recyclerview:recyclerview:1.0.0'
-      implementation 'yogesh.firzen:MukkiyaSevaigal:3.0.1'
-      implementation 'org.apache.commons:commons-io:1.3.2'
+      implementation 'yogesh.firzen:MukkiyaSevaigal:3.0.8'
+      implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
    }
 ```
 
