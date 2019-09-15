@@ -18,7 +18,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/name"
-        android:layout_width="0dp"
+        android:layout_width="100dp"
         android:layout_height="48dp"
         android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
