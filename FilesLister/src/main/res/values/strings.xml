@@ -9,6 +9,8 @@
     <string name="select">Select</string>
     <string name="enter_the_folder_name">Enter the folder name</string>
     <string name="create">Create</string>
+    <string name="create_a_new_directory">Create a new directory</string>
     <string name="please_enter_a_valid_folder_name">Please enter a valid folder name</string>
     <string name="this_folder_already_exists">This folder already exists. \nPlease provide another name for the folder</string>
+    <string name="items">items</string>
 </resources>

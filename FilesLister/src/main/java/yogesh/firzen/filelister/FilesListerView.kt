@@ -11,6 +11,7 @@ import java.io.File
  */
 internal class FilesListerView : RecyclerView {
 
+    public var onFileSelectionChangedListener: OnFileSelectionChangedListener? = null
     private var adapter: FileListerAdapter? = null
 
     val selected: File
@@ -41,12 +42,17 @@ internal class FilesListerView : RecyclerView {
     }
 
     private fun init() {
-        layoutManager = LinearLayoutManager(context, VERTICAL, false)
+
+        layoutManager  = LinearLayoutManager(context, VERTICAL, false)
         adapter = FileListerAdapter(this)
+        adapter?.onFileSelectionChangedListener = OnFileSelectionChangedListener { file, path ->
+            onFileSelectionChangedListener?.onFileSelected(file, path)
+        }
     }
 
     fun start() {
         setAdapter(adapter)
+        setHasFixedSize(true)
         adapter!!.start()
     }
 

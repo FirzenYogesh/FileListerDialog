@@ -3,6 +3,7 @@ package yogesh.firzen.filelister
 import android.content.Context
 import android.os.Environment
 import android.text.TextUtils
+import android.text.format.DateFormat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import yogesh.firzen.mukkiasevaigal.F
 import yogesh.firzen.mukkiasevaigal.M
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
+
 
 /**
  * Created by root on 9/7/17.
@@ -21,8 +24,10 @@ import java.util.*
 
 internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileListHolder> {
 
+    public var onFileSelectionChangedListener: OnFileSelectionChangedListener? = null
     private var data: MutableList<File> = LinkedList()
     var customExtension: String = ""
+
     //private File parent = Environment.getExternalStorageDirectory();
     //parent = defaultDir;
     var defaultDir = Environment.getExternalStorageDirectory()
@@ -161,12 +166,24 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileListHolder {
-        return FileListHolder(View.inflate(context, R.layout.item_file_lister, null))
+
+        val v = View.inflate(context, R.layout.item_file_lister, null);
+
+        val lp = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        v.setLayoutParams(lp)
+        return FileListHolder(v)
     }
 
+    fun formatSize(v: Long): String? {
+        if (v < 1024) return "$v B"
+        val z = (63 - java.lang.Long.numberOfLeadingZeros(v)) / 10
+        return String.format("%.1f %sB", v.toDouble() / (1L shl z * 10), " KMGTPE"[z])
+    }
     override fun onBindViewHolder(holder: FileListHolder, position: Int) {
         val f = data[position]
+
         holder.name.text = f.name
+
         if (unreadableDir) {
             if (position == 0) {
                 holder.name.text = "${f.name} (Internal)"
@@ -176,10 +193,36 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
         }
         if (position == 0 && !unreadableDir) {
             holder.icon.setImageResource(R.drawable.ic_subdirectory_up_black)
+            holder.fileInfoLayout.visibility = View.GONE
         } else {
+
+            if(f.isFile || f.isDirectory){
+
+                holder.fileInfoLayout.visibility = View.VISIBLE
+
+                val c = Calendar.getInstance()
+                c.timeInMillis = f.lastModified()
+                val dateText = SimpleDateFormat(if (is24HourFormat(context)) "MM/dd/yyyy HH:mm" else "dd MMMM, yyyy hh:mm a").format(c.time).toLowerCase()
+                holder.lastModified.text = dateText
+
+                if(f.isFile){
+                    holder.size.text = formatSize(f.length())
+                }else{
+
+                    holder.size.text = context?.getString(R.string.items)+" "+f.listFiles().size
+                }
+
+            }else{
+                holder.fileInfoLayout.visibility = View.GONE
+            }
+
             when {
-                f.path == "" -> holder.icon.setImageResource(R.drawable.ic_create_new_folder_black)
-                //f.path == "" -> holder.name.text = "create a new directory"
+                f.path == "" -> {
+                    holder.icon.setImageResource(R.drawable.ic_create_new_folder_black)
+                    holder.name.setText(R.string.create_a_new_directory)
+                }
+
+
                 f.isDirectory -> holder.icon.setImageResource(R.drawable.ic_folder_black)
                 F.isImage(f) -> holder.icon.setImageResource(R.drawable.ic_photo_black)
                 F.isVideo(f) -> holder.icon.setImageResource(R.drawable.ic_videocam_black)
@@ -200,9 +243,19 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
         fileLister(defaultDir)
     }
 
+    private var is24HourFormat: Boolean? = null
+    fun is24HourFormat(context: Context?): Boolean {
+        if (is24HourFormat == null) is24HourFormat = DateFormat.is24HourFormat(context)
+        return is24HourFormat as Boolean
+    }
+
+
     internal inner class FileListHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
         var name: TextView = itemView.findViewById(R.id.name)
+        var size: TextView = itemView.findViewById(R.id.size)
+        var lastModified: TextView = itemView.findViewById(R.id.last_modified)
+        var fileInfoLayout: View = itemView.findViewById(R.id.file_info_layout)
         var icon: ImageView = itemView.findViewById(R.id.icon)
 
         init {
@@ -237,6 +290,7 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
             } else {
                 val f = data[adapterPosition]
                 selected = f
+                onFileSelectionChangedListener?.onFileSelected(f,f.absolutePath);
                 M.L("From FileLister", f.absolutePath)
                 if (f.isDirectory) {
                     fileLister(f)

@@ -2,6 +2,9 @@ package yogesh.firzen.filelister
 
 import android.content.Context
 import android.content.DialogInterface.*
+import android.text.Html
+import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import java.io.File
 
@@ -94,6 +97,14 @@ class FileListerDialog {
             dialogInterface.dismiss()
             if (onFileSelectedListener != null)
                 onFileSelectedListener!!.onFileSelected(filesListerView!!.selected, filesListerView!!.selected.absolutePath)
+        }
+
+
+        filesListerView!!.onFileSelectionChangedListener = OnFileSelectionChangedListener { file, path ->
+            //alertDialog!!.setTitle(path)
+            //var messageTextView = alertDialog!!.findViewById<TextView>(android.R.id.message)
+            //messageTextView?.isSingleLine = false
+            //messageTextView?.setText(path)
         }
         //alertDialog!!.setButton(BUTTON_NEUTRAL, "Default Dir") { dialogInterface, i ->
             //filesListerView.goToDefaultDir();
