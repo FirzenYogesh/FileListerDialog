@@ -90,15 +90,16 @@ class FileListerDialog {
     private fun init(context: Context) {
         filesListerView = FilesListerView(context)
         alertDialog!!.setView(filesListerView)
-        alertDialog!!.setButton(BUTTON_POSITIVE, "Select") { dialogInterface, i ->
+        alertDialog!!.setButton(BUTTON_POSITIVE, context.getString(R.string.select)) { dialogInterface, i ->
             dialogInterface.dismiss()
             if (onFileSelectedListener != null)
                 onFileSelectedListener!!.onFileSelected(filesListerView!!.selected, filesListerView!!.selected.absolutePath)
         }
-        alertDialog!!.setButton(BUTTON_NEUTRAL, "Default Dir") { dialogInterface, i ->
+        //alertDialog!!.setButton(BUTTON_NEUTRAL, "Default Dir") { dialogInterface, i ->
             //filesListerView.goToDefaultDir();
-        }
-        alertDialog!!.setButton(BUTTON_NEGATIVE, "Cancel") { dialogInterface, i -> dialogInterface.dismiss() }
+        //}
+
+        //alertDialog!!.setButton(BUTTON_NEGATIVE, context.getString(android.R.string.selectAll)) { dialogInterface, i -> dialogInterface.dismiss() }
     }
 
     /**
@@ -107,11 +108,11 @@ class FileListerDialog {
     fun show() {
         //getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         when (filesListerView!!.fileFilter) {
-            FILE_FILTER.DIRECTORY_ONLY -> alertDialog!!.setTitle("Select a directory")
-            FILE_FILTER.VIDEO_ONLY -> alertDialog!!.setTitle("Select a Video file")
-            FILE_FILTER.IMAGE_ONLY -> alertDialog!!.setTitle("Select an Image file")
-            FILE_FILTER.AUDIO_ONLY -> alertDialog!!.setTitle("Select an Audio file")
-            FILE_FILTER.ALL_FILES -> alertDialog!!.setTitle("Select a file")
+            FILE_FILTER.DIRECTORY_ONLY -> alertDialog!!.setTitle(R.string.select_a_directory)
+            FILE_FILTER.VIDEO_ONLY -> alertDialog!!.setTitle(R.string.select_a_video_file)
+            FILE_FILTER.IMAGE_ONLY -> alertDialog!!.setTitle(R.string.select_an_image_file)
+            FILE_FILTER.AUDIO_ONLY -> alertDialog!!.setTitle(R.string.select_an_audio_file)
+            FILE_FILTER.ALL_FILES -> alertDialog!!.setTitle(R.string.select_a_file)
         }
         filesListerView!!.start()
         alertDialog!!.show()

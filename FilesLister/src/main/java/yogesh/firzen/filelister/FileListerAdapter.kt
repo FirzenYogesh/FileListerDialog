@@ -179,6 +179,7 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
         } else {
             when {
                 f.path == "" -> holder.icon.setImageResource(R.drawable.ic_create_new_folder_black)
+                //f.path == "" -> holder.name.text = "create a new directory"
                 f.isDirectory -> holder.icon.setImageResource(R.drawable.ic_folder_black)
                 F.isImage(f) -> holder.icon.setImageResource(R.drawable.ic_photo_black)
                 F.isVideo(f) -> holder.icon.setImageResource(R.drawable.ic_videocam_black)
@@ -214,18 +215,18 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
                 val editText = view.findViewById<AppCompatEditText>(R.id.edittext)
                 val builder = AlertDialog.Builder(context!!)
                         .setView(view)
-                        .setTitle("Enter the folder name")
-                        .setPositiveButton("Create") { dialog, which -> }
+                        .setTitle(R.string.enter_the_folder_name)
+                        .setPositiveButton(R.string.create) { dialog, which -> }
                 val dialog = builder.create()
                 dialog.show()
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     val name = editText.text!!.toString()
                     if (TextUtils.isEmpty(name)) {
-                        M.T(context!!, "Please enter a valid folder name")
+                        M.T(context!!, R.string.please_enter_a_valid_folder_name)
                     } else {
                         val file = File(selected, name)
                         if (file.exists()) {
-                            M.T(context!!, "This folder already exists.\n Please provide another name for the folder")
+                            M.T(context!!, R.string.this_folder_already_exists)
                         } else {
                             dialog.dismiss()
                             file.mkdirs()

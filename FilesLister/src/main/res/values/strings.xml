@@ -1,4 +1,14 @@
 <resources>
     <string name="namma_per_uh">FileLister</string>
     <string name="create_folder_hint">Enter Folder Name Here</string>
+    <string name="select_a_directory">Select a directory</string>
+    <string name="select_a_video_file">Select a Video file</string>
+    <string name="select_an_image_file">Select an Image file</string>
+    <string name="select_an_audio_file">Select an Audio file</string>
+    <string name="select_a_file">Select a file</string>
+    <string name="select">Select</string>
+    <string name="enter_the_folder_name">Enter the folder name</string>
+    <string name="create">Create</string>
+    <string name="please_enter_a_valid_folder_name">Please enter a valid folder name</string>
+    <string name="this_folder_already_exists">This folder already exists. \nPlease provide another name for the folder</string>
 </resources>
