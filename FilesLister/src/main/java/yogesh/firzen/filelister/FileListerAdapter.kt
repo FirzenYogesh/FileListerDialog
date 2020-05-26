@@ -129,7 +129,7 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
                     fs.add(file)
                 } else if (fileFilter == FileListerDialog.FILE_FILTER.APK_ONLY && F.isAPK(file)) {
                     fs.add(file)
-                } else if (fileFilter == FileListerDialog.FILE_FILTER.CUSTOM_EXTENSION && F.getExtension(file) == customExtension) {
+                } else if (fileFilter == FileListerDialog.FILE_FILTER.CUSTOM_EXTENSION && customExtension.contains(F.getExtension(file), true)) {
                     fs.add(file)
                 } else if (fileFilter != FileListerDialog.FILE_FILTER.ALL_FILES && file.isDirectory) {
                     fs.add(file)

@@ -168,6 +168,7 @@ class FileListerDialog {
 
     fun setCustomFileExtension(extension: String) {
 
+        filesListerView!!.customExtension = extension;
     }
 
     companion object {
