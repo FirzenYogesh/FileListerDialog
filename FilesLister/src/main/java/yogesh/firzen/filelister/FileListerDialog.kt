@@ -100,6 +100,11 @@ class FileListerDialog {
         }
 
 
+        filesListerView!!.onFileSelectedListener = OnFileSelectedListener { file, path ->
+            if (onFileSelectedListener != null)
+                onFileSelectedListener!!.onFileSelected(filesListerView!!.selected, filesListerView!!.selected.absolutePath)
+        }
+
         filesListerView!!.onFileSelectionChangedListener = OnFileSelectionChangedListener { file, path ->
             //alertDialog!!.setTitle(path)
             //var messageTextView = alertDialog!!.findViewById<TextView>(android.R.id.message)
@@ -128,6 +133,14 @@ class FileListerDialog {
         filesListerView!!.start()
         alertDialog!!.show()
         alertDialog!!.getButton(BUTTON_NEUTRAL).setOnClickListener { filesListerView!!.goToDefaultDir() }
+    }
+
+
+    /**
+     * Dismiss the FileListerDialog
+     */
+    fun dismiss(){
+        alertDialog!!.dismiss()
     }
 
     /**

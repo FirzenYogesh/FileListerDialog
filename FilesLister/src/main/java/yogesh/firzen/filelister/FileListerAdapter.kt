@@ -24,7 +24,7 @@ import java.util.*
 
 internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileListHolder> {
 
-    public var onFileSelectionChangedListener: OnFileSelectionChangedListener? = null
+    public var onFileSelectedListener: OnFileSelectedListener? = null
     private var data: MutableList<File> = LinkedList()
     var customExtension: String = ""
 
@@ -290,7 +290,8 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
             } else {
                 val f = data[adapterPosition]
                 selected = f
-                onFileSelectionChangedListener?.onFileSelected(f,f.absolutePath);
+                //onFileSelectionChangedListener?.onFileSelected(f,f.absolutePath);
+                onFileSelectedListener?.onFileSelected(f, f.absolutePath);
                 M.L("From FileLister", f.absolutePath)
                 if (f.isDirectory) {
                     fileLister(f)
