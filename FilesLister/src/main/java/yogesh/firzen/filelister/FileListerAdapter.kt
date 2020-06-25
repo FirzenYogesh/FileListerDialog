@@ -291,7 +291,8 @@ internal class FileListerAdapter : RecyclerView.Adapter<FileListerAdapter.FileLi
                 val f = data[adapterPosition]
                 selected = f
                 //onFileSelectionChangedListener?.onFileSelected(f,f.absolutePath);
-                onFileSelectedListener?.onFileSelected(f, f.absolutePath);
+                if(!f.isDirectory)
+                 onFileSelectedListener?.onFileSelected(f, f.absolutePath);
                 M.L("From FileLister", f.absolutePath)
                 if (f.isDirectory) {
                     fileLister(f)

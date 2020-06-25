@@ -129,6 +129,8 @@ class FileListerDialog {
             FILE_FILTER.IMAGE_ONLY -> alertDialog!!.setTitle(R.string.select_an_image_file)
             FILE_FILTER.AUDIO_ONLY -> alertDialog!!.setTitle(R.string.select_an_audio_file)
             FILE_FILTER.ALL_FILES -> alertDialog!!.setTitle(R.string.select_a_file)
+            FILE_FILTER.CUSTOM_EXTENSION -> alertDialog!!.setTitle(R.string.select_a_file)
+            else -> alertDialog!!.setTitle(R.string.select_a_file)
         }
         filesListerView!!.start()
         alertDialog!!.show()
